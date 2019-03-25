@@ -6,4 +6,5 @@ Rubric of 40 points total.
 Week of 3-25-2019
 15 points: Meet and reach consensus on individual tasks.
 15 points: Make progress toward completing tasks.
-10 points: Coordinate to update tasks and give aid.
+5 points: Investigate Python tutorials.
+5 points: Coordinate to update tasks and give aid.
