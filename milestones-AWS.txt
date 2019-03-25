@@ -1,0 +1,5 @@
+//Alex Seagle 3-25-2019
+Rubric of 40 points total.
+15 points: The game is implemented properly without bugs.
+15 points: Algorithm solves the game consistently and efficiently.
+10 points: The user or viewer interface is adequate and informative.
