@@ -1,0 +1,14 @@
+//Ananya Dirghangi
+//03.27.2019
+
+
+Overall rubric for 40 points:
+	Creativity of graphical interface. (15 points)
+	Algorithm solves game efficiently with speedy response time. ( 15 points)
+	User-friendly game that avoids any technical complications and gives player adequate instructions on how to play (dummy instructions). (10 points)
+
+Personal milestones for 40 points:
+	Coordinate division of tasks for individual completion. (15 points)
+	Reach consesnsus on which tasks in project are main priorities. (15 points)
+	Create rough schedule for tasks in order to meet deadline. (5 points)
+	Practice coding in Python. (5 points)
