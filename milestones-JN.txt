@@ -1,7 +1,9 @@
 Milestones Jordan Neely
 
-Week of 3-25-19
-  _/15 assign tasks to each person in the group
-  _/15  
-  _/5 continue to learn python
-  _/5
+Week of 3-25
+  15  discuss and assign tasks to each person in the group
+  10  Make progress towards tasks
+  10  Recreate a challenge in python
+  5   continue to learn python
+  ---------------------------------------------
+  40
