@@ -2,8 +2,7 @@
 //Modified LazyFoo Tutorial01. Outputs a purple window for 5 seconds.
 //Modified LazyFoo Tutorial03. Outputs purple window until user quits. 1:37 P.M.
 ////to 1:58 P.M.
-//Modified LazyFoo Tutorial04. Outputs Black for down key. Red for Left key.
-//Blue for right key. Purple for up key.
+//
 //
 #include <SDL2/SDL.h>
 #include<iostream>
