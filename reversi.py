@@ -78,7 +78,8 @@ if __name__ == "__main__":
     printBoard(board)
 
     finished = False
-    curr_player = "Black"
+    curr_player = None
+    curr_player = change_player(curr_player)
 
     #game loop
     while (not finished):
