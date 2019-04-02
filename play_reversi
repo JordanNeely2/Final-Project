@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import reversi as rv
+
+board = rv.initBoard()
+rv.printBoard(board)
+
+finished = False
+curr_player = None
+curr_player = rv.changePlayer(curr_player)
+
+#game loop
+while (not finished):
+    
+    move = rv.getMove(curr_player)
+    while not rv.isValidMove(board, move):
+            move = rv.getMove(curr_player)
+            
+    rv.playMove(board, move, curr_player) 
+    rv.printBoard(board)
+
+    curr_player = rv.changePlayer(curr_player)
