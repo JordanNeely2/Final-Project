@@ -72,23 +72,3 @@ def changePlayer(curr_player):
     print(f"{curr_player}'s turn.\n")
 
     return curr_player
-
-if __name__ == "__main__":
-    board = initBoard()
-    printBoard(board)
-
-    finished = False
-    curr_player = None
-    curr_player = change_player(curr_player)
-
-    #game loop
-    while (not finished):
-        
-        move = getMove(curr_player)
-        while not isValidMove(board, move):
-                move = getMove(curr_player)
-                
-        playMove(board, move, curr_player) 
-        printBoard(board)
-
-        curr_player = changePlayer(curr_player)
