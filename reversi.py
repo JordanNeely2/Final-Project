@@ -41,21 +41,16 @@ def isValidMove(board, move):
   
     r = int(move["row"])
     c = int(move["col"])
-    #invalid moves
-    if move["row"] > 7 or move["col"] > 7: return False
 
-    #valid moves
-    if board[r][c] == '.': 
-        if board[r+1][c] in ('W', 'B'): return True    # 1 below
-        if board[r-1][c] in ('W', 'B'): return True    # 1 above
-        if board[r][c+1] in ('W', 'B'): return True    # 1 right
-        if board[r][c-1] in ('W', 'B'): return True    # 1 left
-        if board[r+1][c+1] in ('W', 'B'): return True    # up right
-        if board[r+1][c-1] in ('W', 'B'): return True    # up left
-        if board[r-1][c+1] in ('W', 'B'): return True    # down right
-        if board[r-1][c-1] in ('W', 'B'): return True    # down left
 
-    else: return False
+    if board[r][c] == '.' or move['row'] > 7 or move['col'] > 7: 
+        #up, down, left, right, and diagonals
+        for i in (-1, 0, 1):
+            for j in (-1, 0, 1):
+                if board[r+i][c+j] in ('W', 'B'): return True
+    else: 
+        print('Invalid Move, try again')
+        return False
 
 
 #read input from player to get move
@@ -73,8 +68,12 @@ def getMove(curr_player):
 #TODO: flip over appropriate pieces
 def playMove(board, move, curr_player):
     
-    if curr_player == "Black": board[move["row"]][move["col"]] = 'B'
-    else: board[move["row"]][move["col"]] = 'W'
+    if curr_player == "Black": 
+        board[move["row"]][move["col"]] = 'B'
+        #flip('Black')
+    else: 
+        board[move["row"]][move["col"]] = 'W'
+        #flip('White')
     return
 
 #switch to next player's turn
@@ -87,3 +86,7 @@ def changePlayer(curr_player):
     print(f"{curr_player}'s turn.\n")
 
     return curr_player
+
+#flips the appropriate pieces
+#def flip(color):
+
