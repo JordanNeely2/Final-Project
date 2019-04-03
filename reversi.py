@@ -34,12 +34,27 @@ def printBoard(board):
 #checks if given move is valid
 #TODO: check if play is valid, not just empty spot on board
 def isValidMove(board, move):
-   
-
+#   original isValid move just incase none of the below works out
+#   if move["row"] > 7 or move["col"] > 7: return False
+#   if board[move["row"]][move["col"]] == '.': return True                
+#   else: return False
+  
+    r = int(move["row"])
+    c = int(move["col"])
+    #invalid moves
     if move["row"] > 7 or move["col"] > 7: return False
 
-    if board[move["row"]][move["col"]] == '.': return True
-    
+    #valid moves
+    if board[r][c] == '.': 
+        if board[r+1][c] in ('W', 'B'): return True    # 1 below
+        if board[r-1][c] in ('W', 'B'): return True    # 1 above
+        if board[r][c+1] in ('W', 'B'): return True    # 1 right
+        if board[r][c-1] in ('W', 'B'): return True    # 1 left
+        if board[r+1][c+1] in ('W', 'B'): return True    # up right
+        if board[r+1][c-1] in ('W', 'B'): return True    # up left
+        if board[r-1][c+1] in ('W', 'B'): return True    # down right
+        if board[r-1][c-1] in ('W', 'B'): return True    # down left
+
     else: return False
 
 
