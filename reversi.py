@@ -43,14 +43,14 @@ def isValidMove(board, move):
     c = int(move["col"])
 
 
-    if board[r][c] == '.' or move['row'] > 7 or move['col'] > 7: 
+    if board[r][c] == '.' and r in range(8) and c in range(8):
         #up, down, left, right, and diagonals
         for i in (-1, 0, 1):
             for j in (-1, 0, 1):
                 if board[r+i][c+j] in ('W', 'B'): return True
-    else: 
-        print('Invalid Move, try again')
-        return False
+     
+    print('Invalid move, try again')
+    return False
 
 
 #read input from player to get move
