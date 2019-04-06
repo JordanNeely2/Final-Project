@@ -1,92 +1,109 @@
-#initialize board with 2 white and 2 black pieces
-def initBoard():
-    board = []
+class Reversi:
 
-    for i in range(8):
-        line = []
-        if i not in {3, 4}:
-            for j in range(8):
-                line.append('.')
-        
-        else:
-            for j in range(8):
-                if j not in {3, 4}:
+    #initialize board with 2 white and 2 black pieces
+    def __init__(self):
+        self.board = []
+
+        #create board with starting position
+        for i in range(8):
+            line = []
+            if i not in {3, 4}:
+                for j in range(8):
                     line.append('.')
-                else:
-                    if i == j:
-                        line.append('W')
+            
+            else:
+                for j in range(8):
+                    if j not in {3, 4}:
+                        line.append('.')
                     else:
-                        line.append('B')
+                        if i == j:
+                            line.append('W')
+                        else:
+                            line.append('B')
 
-        board.append(line)
-    return board
+            self.board.append(line)
+        
+        self.curr_player = "Black"
+        
+        self.empty = 60
+        self.finished = False
+        
+        return
 
-
-#prints board to screen
-def printBoard(board):
-    print()
-    for i in range(len(board)):
-        print(' '.join(board[i]))
-    print()
-    return
-
-
-#checks if given move is valid
-#TODO: check if play is valid, not just empty spot on board
-def isValidMove(board, move):
-#   original isValid move just incase none of the below works out
-#   if move["row"] > 7 or move["col"] > 7: return False
-#   if board[move["row"]][move["col"]] == '.': return True                
-#   else: return False
-  
-    r = int(move["row"])
-    c = int(move["col"])
+    #prints board to screen
+    def printBoard(self):
+        print()
+        print(' ' * 2 + ' '.join(str(i) for i in range(8)))
+        for i in range(len(self.board)):
+            print(str(i) + ' ' + ' '.join(self.board[i]))
+        print()
+        return
 
 
-    if board[r][c] == '.' and r in range(8) and c in range(8):
-        #up, down, left, right, and diagonals
-        for i in (-1, 0, 1):
-            for j in (-1, 0, 1):
-                if board[r+i][c+j] in ('W', 'B'): return True
+    #checks if given move is valid
+    #TODO: check if play is valid, not just empty spot on board
+    def isValidMove(self, move):
+       
+        r = move["row"]
+        c = move["col"]
+
+        if r in range(8) and c in range(8) and self.board[r][c] == '.':
+            
+            for i in {-1, 0, 1}:
+                for j in {-1, 0, 1}:
+
+                    if r + i in range(8) and c + j in range(8):
+                        if self.board[r + i][c + j] in {'B', 'W'}:
+                            return True
+
+        print("Invalid move, try again.")
+        return False
+
+
+    #read input from player to get move
+    #return dictionary containing row and col info
+    def getMove(self):
+      
+        move = input("Enter a move: ")
      
-    print('Invalid move, try again')
-    return False
+        while len(move.split()) != 2:
+            print("Invalid input: usage - row column")
+            move = input("Enter a move: ")
+
+        row = int(move.split()[0])
+        col = int(move.split()[1])
+
+        return {"row": row, "col": col}
 
 
-#read input from player to get move
-def getMove(curr_player):
-  
-    move = input("Enter a move: ")
-  
-    row = int(move.split()[0])
-    col = int(move.split()[1])
+    #play move
+    #TODO: flip over appropriate pieces
+    def playMove(self, move):
+       
+        r = move["row"]
+        c = move["col"]
 
-    return {"row": row, "col": col}
+        if self.curr_player == "Black": 
+            self.board[r][c] = 'B'
+        else: 
+            self.board[r][c] = 'W'
+        
+        self.empty -= 1
+        if self.empty == 0: self.finished = True
 
+        return
 
-#play move
-#TODO: flip over appropriate pieces
-def playMove(board, move, curr_player):
-    
-    if curr_player == "Black": 
-        board[move["row"]][move["col"]] = 'B'
-        #flip('Black')
-    else: 
-        board[move["row"]][move["col"]] = 'W'
-        #flip('White')
-    return
+    #switch to next player's turn
+    def changePlayer(self):
+        if self.curr_player == "Black":
+            self.curr_player = "White"
+        else:
+            self.curr_player = "Black"
 
-#switch to next player's turn
-def changePlayer(curr_player):
-    if curr_player == "Black":
-        curr_player = "White"
-    else:
-        curr_player = "Black"
+        return
 
-    print(f"{curr_player}'s turn.\n")
+    #print whose turn it is
+    def printPlayer(self):
+        print(f"{self.curr_player}'s turn.\n")
 
-    return curr_player
-
-#flips the appropriate pieces
-#def flip(color):
-
+        return
