@@ -3,7 +3,7 @@ class Reversi:
     #initialize board with 2 white and 2 black pieces
     def __init__(self):
         self.board = []
-
+        
         #create board with starting position
         for i in range(8):
             line = []
@@ -34,12 +34,12 @@ class Reversi:
     def printBoard(self):
         print()
         print(' ' * 2 + ' '.join(str(i) for i in range(8)))
-        for i in range(len(self.board)):
+        for i in range(8):
             print(str(i) + ' ' + ' '.join(self.board[i]))
         print()
         return
 
-
+    """
     #checks if given move is valid
     #TODO: check if play is valid, not just empty spot on board
     def isValidMove(self, move):
@@ -58,7 +58,7 @@ class Reversi:
 
         print("Invalid move, try again.")
         return False
-
+    """
 
     #read input from player to get move
     #return dictionary containing row and col info
@@ -77,21 +77,67 @@ class Reversi:
 
 
     #play move
-    #TODO: flip over appropriate pieces
     def playMove(self, move):
        
         r = move["row"]
         c = move["col"]
-
-        if self.curr_player == "Black": 
-            self.board[r][c] = 'B'
-        else: 
-            self.board[r][c] = 'W'
         
-        self.empty -= 1
-        if self.empty == 0: self.finished = True
+        valid = False
 
-        return
+        #check if spot is empty and on the obard
+        if r in range(8) and c in range(8) and self.board[r][c] == '.':
+            
+            for i in {-1, 0, 1}:
+                for j in {-1, 0, 1}:
+
+                    if r + i in range(8) and c + j in range(8):
+                        if self.board[r + i][c + j] in {'B', 'W'}:
+                            valid = True
+        
+        #find and flip opposing pieces
+        if (valid):
+            num_flipped = 0
+
+            if self.curr_player == "Black":
+                curr = 'B'
+                opp = 'W'
+            else:
+                curr = 'W'
+                opp = 'B'
+            
+            #check in 8 directions
+            for i in {-1, 0, 1}:
+                for j in {-1, 0, 1}:
+
+                    #multiply i and j by mul to move across the board in lines
+                    for mul in range(1, 8):
+                        if r + i * mul in range(8) and c + j * mul in range(8):
+                            
+                            #keep going until you find a friendly piece
+                            if self.board[r + i * mul][c + j * mul] == opp:
+                                continue
+                            if self.board[r + i * mul][c + j * mul] == curr:
+                                
+                                #backtrack and flip pieces
+                                for m in range(mul - 1, 0, -1):
+                                    self.board[r + i * m][c + j * m] = curr
+                                    num_flipped += 1
+                                break
+                            else: break
+
+            #if no pieces flipped, invalid move, else place piece for turn
+            if (num_flipped == 0):
+                valid = False   
+            else:
+                self.board[r][c] = curr
+
+                self.empty -= 1
+                if self.empty == 0: self.finished = True
+
+        if (not valid):
+            print("Invalid move, try again.")
+
+        return valid
 
     #switch to next player's turn
     def changePlayer(self):
@@ -104,6 +150,7 @@ class Reversi:
 
     #print whose turn it is
     def printPlayer(self):
-        print(f"{self.curr_player}'s turn.\n")
-
+        
+        if self.empty > 0: print(f"{self.curr_player}'s turn.\n")
+        else: print("Game is finished!")
         return

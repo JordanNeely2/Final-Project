@@ -10,10 +10,9 @@ game.printPlayer()
 while (not game.finished):
     
     move = game.getMove()
-    while not game.isValidMove(move):
+    while not game.playMove(move):
             move = game.getMove()
             
-    game.playMove(move) 
     game.printBoard()
 
     game.changePlayer()
