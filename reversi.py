@@ -1,8 +1,12 @@
 class Reversi:
 
+    
     #initialize board with 2 white and 2 black pieces
     def __init__(self):
         self.board = []
+
+        self.b_piece = 'B'
+        self.w_piece = 'w'
         
         #create board with starting position
         for i in range(8):
@@ -17,15 +21,17 @@ class Reversi:
                         line.append('.')
                     else:
                         if i == j:
-                            line.append('W')
+                            line.append(self.w_piece)
                         else:
-                            line.append('B')
+                            line.append(self.b_piece)
 
             self.board.append(line)
         
         self.curr_player = "Black"
         
         self.empty = 60
+        self.b_count = 2
+        self.w_count = 2
         self.finished = False
         
         return
@@ -77,7 +83,7 @@ class Reversi:
 
 
     #play move
-    def playMove(self, move):
+    def playMove(self, move, modify=True):
        
         r = move["row"]
         c = move["col"]
@@ -91,7 +97,7 @@ class Reversi:
                 for j in {-1, 0, 1}:
 
                     if r + i in range(8) and c + j in range(8):
-                        if self.board[r + i][c + j] in {'B', 'W'}:
+                        if self.board[r+i][c+j] in {self.b_piece, self.w_piece}:
                             valid = True
         
         #find and flip opposing pieces
@@ -99,11 +105,11 @@ class Reversi:
             num_flipped = 0
 
             if self.curr_player == "Black":
-                curr = 'B'
-                opp = 'W'
+                curr = self.b_piece
+                opp = self.w_piece
             else:
-                curr = 'W'
-                opp = 'B'
+                curr = self.w_piece
+                opp = self.b_piece
             
             #check in 8 directions
             for i in {-1, 0, 1}:
@@ -120,7 +126,10 @@ class Reversi:
                                 
                                 #backtrack and flip pieces
                                 for m in range(mul - 1, 0, -1):
-                                    self.board[r + i * m][c + j * m] = curr
+                                    if modify:
+                                        self.board[r + i * m][c + j * m] = curr
+                                    else:
+                                        None
                                     num_flipped += 1
                                 break
                             else: break
@@ -129,10 +138,19 @@ class Reversi:
             if (num_flipped == 0):
                 valid = False   
             else:
+
                 self.board[r][c] = curr
 
                 self.empty -= 1
                 if self.empty == 0: self.finished = True
+
+                if self.curr_player == "Black": 
+                    self.b_count += num_flipped + 1
+                    self.w_count -= num_flipped
+                else:
+                    self.w_count += num_flipped + 1
+                    self.b_count -= num_flipped
+                
 
         if (not valid):
             print("Invalid move, try again.")
@@ -153,4 +171,9 @@ class Reversi:
         
         if self.empty > 0: print(f"{self.curr_player}'s turn.\n")
         else: print("Game is finished!")
+        return
+
+    def printScore(self):
+        print(f"Black: {self.b_count}")
+        print(f"White: {self.w_count}\n")
         return
