@@ -1,9 +1,32 @@
 #!/usr/bin/env python3
 
+"""
+options:
+    --vis
+        force printing board to command line
+    
+    --no-vis
+        only output board to board.txt
+"""
+
 import reversi as rv
+import sys
+
 
 game = rv.Reversi()
-game.printBoard()
+
+showBoard = game.printBoard
+
+visible = True
+
+if len(sys.argv) > 1:
+    if "--vis" in sys.argv:
+        visible = True
+    elif "--novis" in sys.argv:
+        visible = False
+        showBoard = game.writeBoard
+
+showBoard()
 game.printPlayer()
 
 #game loop
@@ -13,7 +36,13 @@ while (not game.finished):
     while not game.playMove(move):
             move = game.getMove()
             
-    game.printBoard()
+    showBoard()
 
     game.changePlayer()
-    game.printPlayer()
+
+    if visible:
+        game.printScore()
+        game.printPlayer()
+
+if visible:
+    game.printScore()

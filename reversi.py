@@ -45,26 +45,15 @@ class Reversi:
         print()
         return
 
-    """
-    #checks if given move is valid
-    #TODO: check if play is valid, not just empty spot on board
-    def isValidMove(self, move):
-       
-        r = move["row"]
-        c = move["col"]
+    #writes board to file, default name board.txt
+    def writeBoard(self, filename="board.txt"):
+        with open('board.txt','w') as f:
+            for i in range(8):
+                f.write(' '.join(self.board[i]))
+                f.write('\n')
 
-        if r in range(8) and c in range(8) and self.board[r][c] == '.':
-            
-            for i in {-1, 0, 1}:
-                for j in {-1, 0, 1}:
+        return
 
-                    if r + i in range(8) and c + j in range(8):
-                        if self.board[r + i][c + j] in {'B', 'W'}:
-                            return True
-
-        print("Invalid move, try again.")
-        return False
-    """
 
     #read input from player to get move
     #return dictionary containing row and col info
@@ -90,7 +79,7 @@ class Reversi:
         
         valid = False
 
-        #check if spot is empty and on the obard
+        #check if spot is empty and on the board
         if r in range(8) and c in range(8) and self.board[r][c] == '.':
             
             for i in {-1, 0, 1}:
@@ -130,6 +119,7 @@ class Reversi:
                                         self.board[r + i * m][c + j * m] = curr
                                     else:
                                         None
+
                                     num_flipped += 1
                                 break
                             else: break
@@ -139,17 +129,21 @@ class Reversi:
                 valid = False   
             else:
 
-                self.board[r][c] = curr
+                if modify:
+                    self.board[r][c] = curr
 
-                self.empty -= 1
-                if self.empty == 0: self.finished = True
+                    self.empty -= 1
+                    if self.empty == 0: self.finished = True
 
-                if self.curr_player == "Black": 
-                    self.b_count += num_flipped + 1
-                    self.w_count -= num_flipped
+                    if self.curr_player == "Black": 
+                        self.b_count += num_flipped + 1
+                        self.w_count -= num_flipped
+                    else:
+                        self.w_count += num_flipped + 1
+                        self.b_count -= num_flipped
+
                 else:
-                    self.w_count += num_flipped + 1
-                    self.b_count -= num_flipped
+                    None
                 
 
         if (not valid):
