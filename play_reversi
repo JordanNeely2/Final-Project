@@ -22,12 +22,14 @@ visible = True
 if len(sys.argv) > 1:
     if "--vis" in sys.argv:
         visible = True
-    elif "--novis" in sys.argv:
+    elif "--no-vis" in sys.argv:
         visible = False
         showBoard = game.writeBoard
 
-showBoard()
+game.findValidMoves()
+showBoard(playable=True)
 game.printPlayer()
+
 
 #game loop
 while (not game.finished):
@@ -36,10 +38,12 @@ while (not game.finished):
     while not game.playMove(move):
             move = game.getMove()
             
-    showBoard()
 
     game.changePlayer()
 
+    game.findValidMoves()
+    showBoard(playable=True)
+    
     if visible:
         game.printScore()
         game.printPlayer()
