@@ -1,7 +1,7 @@
 import reversi as rv
 import copy
 
-levels = 2
+levels = 3
 
 class ReversiAI:
 
@@ -9,7 +9,6 @@ class ReversiAI:
     def __init__(self, game, level):
         self.game = game
         self.level = level
-        self.game2 = copy.deepcopy(game)
 
     def getMove(self, level):
         if level == 1:
@@ -20,6 +19,12 @@ class ReversiAI:
 
         if level == 3:
             return self.getMoveMinMoves()
+
+        if level == 4:
+            return self.getMoveMaxSMinM()
+
+        if level == 5:
+            return self.getMoveMaxScore(k=2)
 
     #return a random valid move
     def getMoveRandom(self):
@@ -34,8 +39,9 @@ class ReversiAI:
         subgames = {}
 
         for move in self.game.valid_moves[self.game.piece["White"]]:
-            subgames[move] = copy.deepcopy(self.game)
-            subgames[move].playMove({"row": move[0], "col": move[1]}, "White", modify=True)
+            for i in range(k):
+                subgames[move] = copy.deepcopy(self.game)
+                subgames[move].playMove({"row": move[0], "col": move[1]}, "White", modify=True)
 
         #print(subgames)
 
@@ -53,20 +59,27 @@ class ReversiAI:
     #return move which minimizes opponent's options after k moves
     def getMoveMinMoves(self, k=1):
 
+        subgames = {}
 
-        return
+        for move in self.game.valid_moves[self.game.piece["White"]]:
+            subgames[move] = copy.deepcopy(self.game)
+            subgames[move].playMove({"row": move[0], "col": move[1]}, "White", modify=True)
+
+        min_moves = 65
+
+        for move in subgames:
+            subgames[move].findValidMoves("Black")
+            
+            n_moves = len(subgames[move].valid_moves[self.game.piece["Black"]])
+            if n_moves < min_moves:
+                min_moves = n_moves
+                best_move = move
+
+        return {"row": best_move[0], "col": best_move[1]}
 
 
-    def test(self):
-        print("Hello world!")
-        print(self.game.board)
-        print(self.game.poss_moves)
-        print(self.game.valid_moves[self.game.b_piece])
-        print(self.game.valid_moves[self.game.w_piece])
+    #maximize score, if two moves are tied, tiebreak with min opp. moves
+    def getMoveMaxSMinM(self, k=1):
 
-    def test2(self):
-        print("Hello world 2...")
-        print(self.game2.board)
-        print(self.game2.poss_moves)
-        print(self.game2.valid_moves[self.game.b_piece])
-        print(self.game2.valid_moves[self.game.w_piece])
+
+        return {"row": best_move[0], "col": best_move[1]}
