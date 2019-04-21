@@ -1,12 +1,12 @@
 class Reversi:
-
     
     #initialize board with 2 white and 2 black pieces
     def __init__(self):
         self.board = []
 
-        self.b_piece = 'B'
-        self.w_piece = 'w'
+        self.piece = {}
+        self.piece["Black"] = 'B'
+        self.piece["White"] = 'w'
 
         self.poss_moves = set()
 
@@ -23,9 +23,9 @@ class Reversi:
                         line.append('.')
                     else:
                         if i == j:
-                            line.append(self.w_piece)
+                            line.append(self.piece["White"])
                         else:
-                            line.append(self.b_piece)
+                            line.append(self.piece["Black"])
             
             for i in range(2, 6):
                 for j in range(2, 6):
@@ -39,12 +39,12 @@ class Reversi:
         self.empty = 60
 
         self.count = {}
-        self.count[self.b_piece] = 2
-        self.count[self.w_piece] = 2
+        self.count[self.piece["Black"]] = 2
+        self.count[self.piece["White"]] = 2
        
         self.valid_moves = {}
-        self.valid_moves[self.b_piece] = {}
-        self.valid_moves[self.w_piece] = {}
+        self.valid_moves[self.piece["Black"]] = {}
+        self.valid_moves[self.piece["White"]] = {}
 
         self.finished = False
         
@@ -53,15 +53,28 @@ class Reversi:
 
 
     #prints board to screen
-    def printBoard(self, playable=False):
-        print()
-        print(' ' * 2 + ' '.join(str(i) for i in range(8)))
+    def printBoard(self, playable=False, filename=None):
+        
+        if filename == None:
+            pfunc = print
+        else:
+            f = open(filename, 'w')
+            pfunc = f.write
 
-        if self.curr_player == "Black": curr = self.b_piece
-        else: curr = self.w_piece
+
+        pfunc('')
+        pfunc("%s" % (' ' * 2 + ' '.join(str(i) for i in range(8))))
+
+
+        curr = self.piece[self.curr_player]
+        """if self.curr_player == "Black": curr = self.piece["Black"]
+        else: curr = self.piece["White"]
+        """
+        
+        to_print = ""
 
         for i in range(8):
-            to_print = str(i) + ' '
+            to_print += str(i) + ' ' * 1
             
             if playable:
                 for j in range(len(self.board[i])):
@@ -74,13 +87,18 @@ class Reversi:
             
             else:
                 to_print += ' '.join(self.board[i])
-            
-            print(to_print)
+                       
+            to_print += '\n'
+
+        pfunc(to_print)
         
-        print()
+        pfunc('')
+
+        if filename != None:
+            f.close()
         
         return
-
+    
 
 
     #writes board to file, default name board.txt
@@ -127,15 +145,17 @@ class Reversi:
         #print(players)
 
         for p in players:
-            if p == "Black": curr = self.b_piece
-            else: curr = self.w_piece
-            
+
+            curr = self.piece[p]
+
+            """if p == "Black": curr = self.piece["Black"]
+            else: curr = self.piece["White"]
+            """
+
             for move in self.poss_moves:
                 if move in self.valid_moves[curr] and \
                 self.valid_moves[curr][move]["modified"] == False:
                     continue
-                #elif move in self.valid_moves[curr] and \
-                #       self.valid_moves[curr][move]["modified"] == True:
                 else:
                     #print(f"p: {p}, move: {move}")
                     #print(f"playing move: {move[0]}, {move[1]}")
@@ -144,9 +164,10 @@ class Reversi:
                         del self.valid_moves[curr][move]
 
                     self.playMove({"row": move[0], "col": move[1]}, p, modify=False)
-                
+        if len(self.valid_moves[curr]) == 0: self.changePlayer()        
                     
-        #print(self.valid_moves[curr])
+        #print(self.valid_moves[self.piece["Black"]], '\n')
+        #print(self.valid_moves[self.piece["White"]])
         return
 
 
@@ -169,7 +190,7 @@ class Reversi:
                 for j in {-1, 0, 1}:
 
                     if r + i in range(8) and c + j in range(8):
-                        if self.board[r+i][c+j] in {self.b_piece, self.w_piece}:
+                        if self.board[r+i][c+j] in {self.piece["Black"], self.piece["White"]}:
                             valid = True
         
         #find and flip opposing pieces
@@ -177,11 +198,11 @@ class Reversi:
             num_flipped = 0
 
             if player == "Black":
-                curr = self.b_piece
-                opp = self.w_piece
+                curr = self.piece["Black"]
+                opp = self.piece["White"]
             else:
-                curr = self.w_piece
-                opp = self.b_piece
+                curr = self.piece["White"]
+                opp = self.piece["Black"]
             
             #check in 8 directions
             for i in {-1, 0, 1}:
@@ -219,7 +240,7 @@ class Reversi:
                                                     cand[mov]["modified"]=True
                                     else:
                                         if (r, c) not in self.valid_moves[curr]:
-                                            self.valid_moves[curr][(r,c)] = {}
+                                            self.valid_moves[curr][(r, c)] = {}
 
                                         cand = self.valid_moves[curr][(r, c)]
                                         
@@ -251,6 +272,7 @@ class Reversi:
 
                 if modify:
                     self.board[r][c] = curr
+                    #self.last_played = (r, c)
 
                     self.empty -= 1
                     if self.empty == 0: self.finished = True
@@ -306,6 +328,6 @@ class Reversi:
 
     #print score
     def printScore(self):
-        print(f"Black: {self.count[self.b_piece]}")
-        print(f"White: {self.count[self.w_piece]}\n")
+        print(f"Black: {self.count[self.piece['Black']]}")
+        print(f"White: {self.count[self.piece['White']]}\n")
         return
