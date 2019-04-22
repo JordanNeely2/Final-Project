@@ -1,0 +1,6 @@
+Alex Seagle Final Project Time Log
+//See previous log.
+About 3 hours outside lab on 4-4-2019 to continue making a program that makes the game window and handles user input on the week of 4-4-2019
+
+
+About 2 hours outside lab on 4-22-2019 to continue the game window program.
