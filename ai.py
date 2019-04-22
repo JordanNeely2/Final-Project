@@ -1,5 +1,6 @@
 import reversi as rv
 import copy
+import random
 
 levels = 3
 
@@ -28,9 +29,14 @@ class ReversiAI:
 
     #return a random valid move
     def getMoveRandom(self):
+        move_list = []
+
+        for move in self.game.valid_moves[self.game.piece["White"]]:
+            move_list.append(move)
         
-        
-        return
+        rand_move = random.choice(move_list)
+            
+        return {"row": rand_move[0], "col": rand_move[1]}
 
 
     #returns move with highest score for white after k moves
