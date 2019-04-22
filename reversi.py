@@ -63,8 +63,9 @@ class Reversi:
 
 
         pfunc('')
-        pfunc("%s" % (' ' * 2 + ' '.join(str(i) for i in range(8))))
-
+        if filename == None:
+            pfunc("%s" % (' ' * 2 + ' '.join(str(i) for i in range(8))))
+        
 
         curr = self.piece[self.curr_player]
         """if self.curr_player == "Black": curr = self.piece["Black"]
@@ -74,7 +75,8 @@ class Reversi:
         to_print = ""
 
         for i in range(8):
-            to_print += str(i) + ' ' * 1
+            if filename == None:
+                to_print += str(i) + ' ' * 1
             
             if playable:
                 for j in range(len(self.board[i])):
@@ -114,13 +116,24 @@ class Reversi:
 
     #read input from player to get move
     #return dictionary containing row and col info
-    def getMove(self):
-      
-        move = input("Enter a move: ")
-     
-        while len(move.split()) != 2:
-            print("Invalid input: usage - row column")
+    def getMove(self, filename=None):
+        
+        if filename == None:
             move = input("Enter a move: ")
+         
+            while len(move.split()) != 2:
+                print("Invalid input: usage - row column")
+                move = input("Enter a move: ")
+
+        else:
+            move = None
+            
+            while move == None:
+                try: 
+                    with open('move.txt','r') as f:
+                        move = next(f).strip()
+                except FileNotFoundError:
+                    None
 
         row = int(move.split()[0])
         col = int(move.split()[1])
@@ -174,7 +187,7 @@ class Reversi:
 
     #check validity of move and play it
     #return True on valid move, False on invalid
-    def playMove(self, move, player=None, modify=True):
+    def playMove(self, move, player=None, modify=True, vis=True):
        
         if player == None: player = self.curr_player
 
@@ -300,7 +313,7 @@ class Reversi:
                     None
                     #TODO: code to check a move 
 
-        if not valid and modify:
+        if not valid and modify and vis:
             print("Invalid move, try again.")
 
         return valid
@@ -309,11 +322,15 @@ class Reversi:
 
     #switch to next player's turn
     def changePlayer(self):
+        curr = self.curr_player
         if self.curr_player == "Black":
-            self.curr_player = "White"
+            opp = "White"
         else:
-            self.curr_player = "Black"
+            opp = "Black"
 
+        if len(self.valid_moves[self.piece[curr]]) != 0:
+            self.curr_player = opp
+            
         return
 
 
@@ -321,7 +338,7 @@ class Reversi:
     #print whose turn it is
     def printPlayer(self):
         
-        if self.empty > 0: print(f"{self.curr_player}'s turn.\n")
+        if self.empty > 0: print("%s's turn.\n" % (self.curr_player))
         else: print("Game is finished!")
         return
 
