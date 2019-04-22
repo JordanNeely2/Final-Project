@@ -131,7 +131,7 @@ class Reversi:
             while move == None:
                 try: 
                     with open('move.txt','r') as f:
-                        move = next(f).strip()
+                        move = f.read().strip()
                 except FileNotFoundError:
                     None
 
