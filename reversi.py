@@ -345,6 +345,6 @@ class Reversi:
 
     #print score
     def printScore(self):
-        print(f"Black: {self.count[self.piece['Black']]}")
-        print(f"White: {self.count[self.piece['White']]}\n")
+        print("Black: %s" % ({self.count[self.piece['Black']]}))
+        print("White: %s\n" % ({self.count[self.piece['White']]}))
         return
