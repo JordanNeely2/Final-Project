@@ -7,8 +7,10 @@ options:
     
     --no-vis
         only output board to board.txt
+
+    --ai=n
+        player 2 will be an ai, level n
 """
-#TODO: account for 0 playable moves
 
 import reversi as rv
 import ai
@@ -48,26 +50,24 @@ while (not game.finished):
     if ai_enabled == True and game.curr_player == "White":
         print("getting move from AI...")
         move = rev_ai.getMove(level)
-        print("AI played:  ", move)
+        print("AI played: ", move)
     else:
-        move = game.getMove()
-    while not game.playMove(move):
+        move = game.getMove(fname)
+
+    while not game.playMove(move, vis=visible):
         if ai_enabled == True and game.curr_player == "White":
             print("getting move from AI...")
             move = rev_ai.getMove(level)
-            print("AI played:  ", move)
+            print("AI played: ", move)
         else:
-            move = game.getMove()
+            move = game.getMove(fname)
             
 
+    game.findValidMoves("all")
     game.changePlayer()
 
-    game.findValidMoves()
     game.printBoard(playable=True, filename=fname)
    
-
-    #ai.test()
-    #ai.test2()
 
     if visible:
         game.printScore()
