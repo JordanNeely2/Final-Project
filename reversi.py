@@ -132,9 +132,10 @@ class Reversi:
                 try: 
                     with open('move.txt','r') as f:
                         move = f.read().strip()
+                        print(move)
                 except FileNotFoundError:
                     None
-
+        print(move.split())
         row = int(move.split()[0])
         col = int(move.split()[1])
 
