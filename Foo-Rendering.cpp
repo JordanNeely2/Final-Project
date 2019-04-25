@@ -88,7 +88,7 @@ SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
 //Scene sprites
-SDL_Rect gSpriteClips[ 4 ];
+SDL_Rect gSpriteClips[ 5 ];
 LTexture gSpriteSheetTexture;
 
 //Button objects.
@@ -202,7 +202,7 @@ void LButton::handleEvent( SDL_Event* e )
 {
 	//If mouse event happened.
 	if(e->type == SDL_MOUSEBUTTONDOWN){
-		cout << "Mouse Down" << endl;
+//		cout << "Mouse Down" << endl;
 		int x, y;
 		SDL_GetMouseState( &x, &y );
 		//Check if mouse is in button.
@@ -210,29 +210,29 @@ void LButton::handleEvent( SDL_Event* e )
 		//Mouse left
 		if( x < mPosition.x )
 		{
-			cout << "x < mPos.x" << endl;
+//			cout << "x < mPos.x" << endl;
 			//			inside = false;
 		}
 		//Mouse right
 		else if( x > mPosition.x + BUTTON_WIDTH )
 		{
-			cout << "x > M" << endl;
+//			cout << "x > M" << endl;
 			//			inside = false;
 		}
 		//Mouse above
 		else if( y < mPosition.y )
 		{
-			cout << "y < M" << endl;
+//			cout << "y < M" << endl;
 			//			inside = false;
 		}
 		//Mouse below
 		else if( y > mPosition.y + BUTTON_HEIGHT )
 		{
-			cout << "y > M" << endl;
+//			cout << "y > M" << endl;
 			//			inside = false;
 		}
 		else{
-			cout << "Button Pushed" << endl;
+//			cout << "Button Pushed" << endl;
 
 			int newi,newj;
 			if(x >= 0 && x <= 100){
@@ -287,7 +287,7 @@ void LButton::handleEvent( SDL_Event* e )
 			}
 			//			Board[newi][newj] = 'B';
 
-			fout.open("/home/aseagle/COSC-302/Final/Final-Project/move.txt", ios::out);
+			fout.open("move.txt", ios::out);
 			fout << newi << " " << newj << " ";
 			fout.close();
 
@@ -364,7 +364,7 @@ bool loadMedia()
 	bool success = true;
 
 	//Load sprite sheet texture
-	if( !gSpriteSheetTexture.loadFromFile( "/home/aseagle/COSC-302/Final/Final-Project/11_clip_rendering_and_sprite_sheets/Pieces2.xcf" ) )
+	if( !gSpriteSheetTexture.loadFromFile( "Pieces2.xcf" ) )
 	{
 		printf( "Failed to load sprite sheet texture!\n" );
 		success = false;
@@ -398,6 +398,13 @@ bool loadMedia()
 		gSpriteClips[ 3 ].y = 100;
 		gSpriteClips[ 3 ].w = 100;
 		gSpriteClips[ 3 ].h = 100;
+
+		//Set sprite for the rest of the window
+		//Other
+		gSpriteClips[ 4 ].x = 200;
+		gSpriteClips[ 4 ].y = 0;
+		gSpriteClips[ 4 ].w = 224;
+		gSpriteClips[ 4 ].h = 800;
 	}
 
 	return success;
@@ -442,14 +449,14 @@ void close()
 //char Board[8][8];
 int main( int argc, char* args[] )
 {
-	 fout.open("/home/aseagle/COSC-302/Final/Final-Project/move.txt", ios::out);
+	 fout.open("move.txt", ios::out);
 	             fout << 0 << " " << 0 << " ";
 				             fout.close();
 
 	ifstream fin;
 	int count_i = 0;
 	int count_j = 0;
-	fin.open("/home/aseagle/COSC-302/Final/Final-Project/board.txt", ios::in);
+	fin.open("board.txt", ios::in);
 	int i,j;
 	char input;
 	//	char Board[8][8];
@@ -510,7 +517,7 @@ else
 			//Clear screen
 			SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			SDL_RenderClear( gRenderer );
-	        fin.open("/home/aseagle/COSC-302/Final/Final-Project/board.txt", ios::in);
+	        fin.open("board.txt", ios::in);
 			if(fin.eof() == 0)
             {
 				for(i = 0; i < 8; i++){
@@ -548,6 +555,9 @@ else
 				//						cout << Board[i][j] << " ";
 			}
 			}
+//Rest of the window
+            gSpriteSheetTexture.render( 800, 0, &gSpriteClips[ 4 ] );
+
 			SDL_RenderPresent(gRenderer);
 
 			//
