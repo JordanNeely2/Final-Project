@@ -128,7 +128,7 @@ class Reversi:
         else:
             move = None
             
-            while move == None:
+            while move == None or len(move.split()) != 2:
                 try: 
                     with open('move.txt','r') as f:
                         move = f.read().strip()
@@ -330,7 +330,10 @@ class Reversi:
         else:
             opp = "Black"
 
-        if len(self.valid_moves[self.piece[curr]]) != 0:
+        if len(self.valid_moves[self.piece[opp]]) == 0:
+            if len(self.valid_moves[self.piece[curr]]) == 0:
+                self.finished = True
+        else:
             self.curr_player = opp
             
         return
@@ -347,6 +350,6 @@ class Reversi:
 
     #print score
     def printScore(self):
-        print("Black: %s" % ({self.count[self.piece['Black']]}))
-        print("White: %s\n" % ({self.count[self.piece['White']]}))
+        print("Black: %s" % (self.count[self.piece['Black']]))
+        print("White: %s\n" % (self.count[self.piece['White']]))
         return
