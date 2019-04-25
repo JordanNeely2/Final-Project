@@ -534,7 +534,7 @@ else
 			for(i = 0; i < 8; i++){
 				for(j = 0; j < 8; j++){
 
-			if(Board[i][j] == 'W'){
+			if(Board[i][j] == 'w'){
 				gSpriteSheetTexture.render( j*100, i*100, &gSpriteClips[ 0 ]);
 //				SDL_RenderPresent( gRenderer );
 			}
