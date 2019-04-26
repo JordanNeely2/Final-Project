@@ -1,0 +1,7 @@
+//CS302 Final Project Reversi Team Meeting Log
+//Alex Seagle, Jordan Neely, and Charles Baker
+
+Overall tasks were assigned during class and progress was discussed throughout the semester.
+Alex Seagle had the task of making the game window in SDL2. Charles Baker and Jordan Neely collaborated to make the game algorithms in Python.
+Alex Seagle and Charles Baker shared a lab time and collaborated toward the end of the semester to connect the programs.
+
