@@ -1,8 +1,9 @@
 import reversi as rv
 import copy
 import random
+import time
 
-levels = 3
+levels = 4
 
 class ReversiAI:
 
@@ -12,20 +13,28 @@ class ReversiAI:
         self.level = level
 
     def getMove(self, level):
+        t_start = time.clock()
+
+        wait_time = 1
+        
         if level == 1:
-            return self.getMoveRandom()
+            move = self.getMoveRandom()
 
         if level == 2:
-            return self.getMoveMaxScore()
-
+            move = self.getMoveMinMoves()
+        
         if level == 3:
-            return self.getMoveMinMoves()
+            move = self.getMoveMaxScore()
 
         if level == 4:
-            return self.getMoveMaxSMinM()
+            move = self.getMoveWeighted()
 
-        if level == 5:
-            return self.getMoveMaxScore(k=2)
+        t_end = time.clock()
+
+        if t_end - t_start < wait_time:
+            time.sleep(wait_time - (t_end - t_start))
+
+        return move
 
     #return a random valid move
     def getMoveRandom(self):
@@ -84,8 +93,25 @@ class ReversiAI:
         return {"row": best_move[0], "col": best_move[1]}
 
 
-    #maximize score, if two moves are tied, tiebreak with min opp. moves
-    def getMoveMaxSMinM(self, k=1):
+    #return move with best weighting based on game strategy
+    #board weightings borrowed from http://web.eecs.utk.edu/~zzhang61/docs/reports/2014.04%20-%20Searching%20Algorithms%20in%20Playing%20Othello.pdf
+    def getMoveWeighted(self, k=1):
 
+        with open('board_weight.txt', 'r') as f:
+            weights = []
+
+            for line in f:
+                L = []
+                for weight in line.split():
+                    L.append(int(weight))
+
+                weights.append(L)
+        
+        best_weight = -50
+
+        for move in self.game.valid_moves[self.game.piece["White"]]:
+            if weights[move[0]][move[1]] > best_weight:
+                best_weight = weights[move[0]][move[1]]
+                best_move = move
 
         return {"row": best_move[0], "col": best_move[1]}
