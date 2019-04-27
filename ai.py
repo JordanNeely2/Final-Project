@@ -126,34 +126,36 @@ class ReversiAI:
             best_weight = -1000
         if game.curr_player == "Black":
             best_weight = 1000
-
-        for move in moves:
-            w = curr_weight
-            subgame = copy.deepcopy(game)
-            
-            subgame.playMove({"row": move[0], "col": move[1]}, subgame.curr_player, modify=True)
-            #print(w)
-            #print(move)
-            #print(subgame.curr_player)
-            if subgame.curr_player == "White":
-                w += self.weights[move[0]][move[1]]
-            else: 
-                w -= self.weights[move[0]][move[1]]
-            #print(w)
-            
-            subgame.findValidMoves("all")
-            subgame.changePlayer()
-            
-            my_weight = self.getMoveWeighted(subgame, subgame.valid_moves[subgame.piece[subgame.curr_player]], w, k-1, k_max)
         
-            if game.curr_player == "White":
-                if my_weight > best_weight:
-                    best_weight = my_weight
-                    best_move = move
-            if game.curr_player == "Black":
-                if my_weight < best_weight:
-                    best_weight = my_weight
-                    best_move = move
+        
+        if game.finished == False:
+            for move in moves:
+                w = curr_weight
+                subgame = copy.deepcopy(game)
+                
+                subgame.playMove({"row": move[0], "col": move[1]}, subgame.curr_player, modify=True)
+                #print(w)
+                #print(move)
+                #print(subgame.curr_player)
+                if subgame.curr_player == "White":
+                    w += self.weights[move[0]][move[1]]
+                else: 
+                    w -= self.weights[move[0]][move[1]]
+                #print(w)
+                
+                subgame.findValidMoves("all")
+                subgame.changePlayer()
+                
+                my_weight = self.getMoveWeighted(subgame, subgame.valid_moves[subgame.piece[subgame.curr_player]], w, k-1, k_max)
+            
+                if game.curr_player == "White":
+                    if my_weight >= best_weight:
+                        best_weight = my_weight
+                        best_move = move
+                if game.curr_player == "Black":
+                    if my_weight <= best_weight:
+                        best_weight = my_weight
+                        best_move = move
 
         if k < k_max:
             #print("returning best weight: %d" % best_weight)
