@@ -110,7 +110,6 @@ class ReversiAI:
     #return move with best weighting based on game strategy
     #board weightings borrowed from http://web.eecs.utk.edu/~zzhang61/docs/reports/2014.04%20-%20Searching%20Algorithms%20in%20Playing%20Othello.pdf
     def getMoveWeighted(self, game=None, moves=None, curr_weight=0, k=1, k_max=None):
-        print(k) 
         if game == None:
             game = self.game
 
@@ -123,35 +122,42 @@ class ReversiAI:
         if k == 0:
             return curr_weight
 
-
-        best_weight = -50
+        if game.curr_player == "White":
+            best_weight = -1000
+        if game.curr_player == "Black":
+            best_weight = 1000
 
         for move in moves:
             w = curr_weight
             subgame = copy.deepcopy(game)
             
             subgame.playMove({"row": move[0], "col": move[1]}, subgame.curr_player, modify=True)
-            print(w)
-            print(move)
-            print(subgame.curr_player)
+            #print(w)
+            #print(move)
+            #print(subgame.curr_player)
             if subgame.curr_player == "White":
                 w += self.weights[move[0]][move[1]]
             else: 
                 w -= self.weights[move[0]][move[1]]
-            print(w)
+            #print(w)
             
             subgame.findValidMoves("all")
             subgame.changePlayer()
             
             my_weight = self.getMoveWeighted(subgame, subgame.valid_moves[subgame.piece[subgame.curr_player]], w, k-1, k_max)
         
-            if my_weight > best_weight:
-                best_weight = my_weight
-                best_move = move
-       
+            if game.curr_player == "White":
+                if my_weight > best_weight:
+                    best_weight = my_weight
+                    best_move = move
+            if game.curr_player == "Black":
+                if my_weight < best_weight:
+                    best_weight = my_weight
+                    best_move = move
+
         if k < k_max:
-            print("returning best weight: %d" % best_weight)
+            #print("returning best weight: %d" % best_weight)
             return best_weight
         if k == k_max:
-            print("best weight found: %d" % best_weight)
+            #print("best weight found: %d" % best_weight)
             return {"row": best_move[0], "col": best_move[1]}
