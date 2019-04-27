@@ -1,3 +1,6 @@
+#Chas Baker, Jordan Neely, Alex Seagle
+#Reversi class - represents game, contains functions to manipulate/display state
+
 class Reversi:
     
     #initialize board with 2 white and 2 black pieces
@@ -33,7 +36,8 @@ class Reversi:
                         self.poss_moves.add((i, j))
 
             self.board.append(line)
-        
+      
+        #initialize other variables
         self.curr_player = "Black"
         
         self.empty = 60
@@ -52,7 +56,7 @@ class Reversi:
 
 
 
-    #prints board to screen
+    #prints board to screen or file
     def printBoard(self, playable=False, filename=None):
         
         if filename == None:
@@ -68,9 +72,6 @@ class Reversi:
         
 
         curr = self.piece[self.curr_player]
-        """if self.curr_player == "Black": curr = self.piece["Black"]
-        else: curr = self.piece["White"]
-        """
         
         to_print = ""
 
@@ -100,17 +101,6 @@ class Reversi:
             f.close()
         
         return
-    
-
-
-    #writes board to file, default name board.txt
-    def writeBoard(self, filename="board.txt"):
-        with open('board.txt','w') as f:
-            for i in range(8):
-                f.write(' '.join(self.board[i]))
-                f.write('\n')
-
-        return
 
 
 
@@ -132,11 +122,9 @@ class Reversi:
                 try: 
                     with open('move.txt','r') as f:
                         move = f.read().strip()
-                        #print(move)
                 except FileNotFoundError:
                     None
         
-        #print(move.split())
         row = int(move.split()[0])
         col = int(move.split()[1])
 
@@ -148,8 +136,6 @@ class Reversi:
     #memoize moves - if no pieces affected are changed, it is still valid
     def findValidMoves(self, player=None):
       
-        #print(self.poss_moves)
-
         if player == None: player = self.curr_player
 
         if player == "all":
@@ -157,23 +143,17 @@ class Reversi:
         else:
             players = [player]
 
-        #print(players)
 
         for p in players:
 
             curr = self.piece[p]
 
-            """if p == "Black": curr = self.piece["Black"]
-            else: curr = self.piece["White"]
-            """
-
+            #test each possible move to see if it is valid
             for move in self.poss_moves:
                 if move in self.valid_moves[curr] and \
                 self.valid_moves[curr][move]["modified"] == False:
                     continue
                 else:
-                    #print(f"p: {p}, move: {move}")
-                    #print(f"playing move: {move[0]}, {move[1]}")
                     if move in self.valid_moves[curr] and \
                     self.valid_moves[curr][move]["modified"] == True:
                         del self.valid_moves[curr][move]
@@ -181,8 +161,6 @@ class Reversi:
                     self.playMove({"row": move[0], "col": move[1]}, p, modify=False)
         if len(self.valid_moves[curr]) == 0: self.changePlayer()        
                     
-        #print(self.valid_moves[self.piece["Black"]], '\n')
-        #print(self.valid_moves[self.piece["White"]])
         return
 
 
@@ -287,7 +265,6 @@ class Reversi:
 
                 if modify:
                     self.board[r][c] = curr
-                    #self.last_played = (r, c)
 
                     self.empty -= 1
                     if self.empty == 0: self.finished = True
@@ -295,7 +272,6 @@ class Reversi:
                     self.count[curr] += num_flipped + 1
                     self.count[opp] -= num_flipped
 
-                    #TODO: modify poss_moves
                     self.poss_moves -= {(r, c)}
 
                     for i in {-1, 0, 1}:
@@ -313,7 +289,6 @@ class Reversi:
 
                 else:
                     None
-                    #TODO: code to check a move 
 
         if not valid and modify and vis:
             print("Invalid move, try again.")

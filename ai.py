@@ -1,3 +1,6 @@
+#Chas Baker, Jordan Neely, Alex Seagle
+#Reversi AI class - interfaces with Reversi class
+
 import reversi as rv
 import copy
 import random
@@ -22,7 +25,8 @@ class ReversiAI:
                         L.append(int(weight))
 
                     self.weights.append(L)
-
+    
+    #get move from ai, pause for up to 1 second so player can see board
     def getMove(self, level):
         t_start = time.clock()
 
@@ -72,7 +76,6 @@ class ReversiAI:
                 subgames[move] = copy.deepcopy(self.game)
                 subgames[move].playMove({"row": move[0], "col": move[1]}, "White", modify=True)
 
-        #print(subgames)
 
         max_score = 0
 
@@ -108,6 +111,7 @@ class ReversiAI:
 
 
     #return move with best weighting based on game strategy
+    #recursively plays moves on board (if k > 1) and calculates best weight
     #board weightings borrowed from http://web.eecs.utk.edu/~zzhang61/docs/reports/2014.04%20-%20Searching%20Algorithms%20in%20Playing%20Othello.pdf
     def getMoveWeighted(self, game=None, moves=None, curr_weight=0, k=1, k_max=None):
         if game == None:
@@ -134,32 +138,31 @@ class ReversiAI:
                 subgame = copy.deepcopy(game)
                 
                 subgame.playMove({"row": move[0], "col": move[1]}, subgame.curr_player, modify=True)
-                #print(w)
-                #print(move)
-                #print(subgame.curr_player)
+                
                 if subgame.curr_player == "White":
                     w += self.weights[move[0]][move[1]]
                 else: 
                     w -= self.weights[move[0]][move[1]]
-                #print(w)
                 
                 subgame.findValidMoves("all")
                 subgame.changePlayer()
                 
                 my_weight = self.getMoveWeighted(subgame, subgame.valid_moves[subgame.piece[subgame.curr_player]], w, k-1, k_max)
-            
+           
+                #choose highest weight on AI's simulated turns
                 if game.curr_player == "White":
                     if my_weight >= best_weight:
                         best_weight = my_weight
                         best_move = move
+
+                #choose lowest weight on player's simulated turns
                 if game.curr_player == "Black":
                     if my_weight <= best_weight:
                         best_weight = my_weight
                         best_move = move
 
         if k < k_max:
-            #print("returning best weight: %d" % best_weight)
             return best_weight
+        
         if k == k_max:
-            #print("best weight found: %d" % best_weight)
             return {"row": best_move[0], "col": best_move[1]}
