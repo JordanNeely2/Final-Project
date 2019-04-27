@@ -1,0 +1,15 @@
+Chas Baker
+Time Log for Final Project
+
+Admittedly, this is mostly estimated as I did not keep exact track throughout the semester.
+
+---Learning Python---
+~5 hours spent reading through Python tutorial around the time the final project was assigned.
+~10+ hours spent doing practice interview questions in Python. This was not explicitly work on the project, but did help me become comfortable enough with it to use it for the project.
+
+---Working on project---
+	reversi.py and play_reversi
+Spent a majority of the time on these two programs. Worked on these from Mar 29 until April 21 when we got the first AI set up. I don't know exactly how much time, as I would pick it up and write code for a couple hours here and there until I got stuck or felt like stopping. Most of the work here went into a) the actual logic of flipping pieces, as well as b) identifying the valid moves. We memoized the valid moves and marked them when they were affected by another move being played. This saved time so we didn't have to test every possible move every time. 
+
+	ai.py
+Probably only spent 10 hours on this one at most. Most of the AI are simple. The only really advanced ones are AI 4 and 5, which Jordan and I worked on together on the 26th, and I finalized on the 27th. 
