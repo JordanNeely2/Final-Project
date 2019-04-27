@@ -3,7 +3,7 @@ import copy
 import random
 import time
 
-levels = 4
+levels = 5
 
 class ReversiAI:
 
@@ -11,6 +11,17 @@ class ReversiAI:
     def __init__(self, game, level):
         self.game = game
         self.level = level
+        
+        if self.level in {4, 5}:
+            with open('board_weight.txt', 'r') as f:
+                self.weights = []
+
+                for line in f:
+                    L = []
+                    for weight in line.split():
+                        L.append(int(weight))
+
+                    self.weights.append(L)
 
     def getMove(self, level):
         t_start = time.clock()
@@ -28,6 +39,9 @@ class ReversiAI:
 
         if level == 4:
             move = self.getMoveWeighted()
+        
+        if level == 5:
+            move = self.getMoveWeighted(k=3)
 
         t_end = time.clock()
 
@@ -95,23 +109,49 @@ class ReversiAI:
 
     #return move with best weighting based on game strategy
     #board weightings borrowed from http://web.eecs.utk.edu/~zzhang61/docs/reports/2014.04%20-%20Searching%20Algorithms%20in%20Playing%20Othello.pdf
-    def getMoveWeighted(self, k=1):
+    def getMoveWeighted(self, game=None, moves=None, curr_weight=0, k=1, k_max=None):
+        print(k) 
+        if game == None:
+            game = self.game
 
-        with open('board_weight.txt', 'r') as f:
-            weights = []
+        if moves == None:
+            moves = game.valid_moves[game.piece[game.curr_player]]
 
-            for line in f:
-                L = []
-                for weight in line.split():
-                    L.append(int(weight))
+        if k_max == None:
+            k_max = k
 
-                weights.append(L)
-        
+        if k == 0:
+            return curr_weight
+
+
         best_weight = -50
 
-        for move in self.game.valid_moves[self.game.piece["White"]]:
-            if weights[move[0]][move[1]] > best_weight:
-                best_weight = weights[move[0]][move[1]]
+        for move in moves:
+            w = curr_weight
+            subgame = copy.deepcopy(game)
+            
+            subgame.playMove({"row": move[0], "col": move[1]}, subgame.curr_player, modify=True)
+            print(w)
+            print(move)
+            print(subgame.curr_player)
+            if subgame.curr_player == "White":
+                w += self.weights[move[0]][move[1]]
+            else: 
+                w -= self.weights[move[0]][move[1]]
+            print(w)
+            
+            subgame.findValidMoves("all")
+            subgame.changePlayer()
+            
+            my_weight = self.getMoveWeighted(subgame, subgame.valid_moves[subgame.piece[subgame.curr_player]], w, k-1, k_max)
+        
+            if my_weight > best_weight:
+                best_weight = my_weight
                 best_move = move
-
-        return {"row": best_move[0], "col": best_move[1]}
+       
+        if k < k_max:
+            print("returning best weight: %d" % best_weight)
+            return best_weight
+        if k == k_max:
+            print("best weight found: %d" % best_weight)
+            return {"row": best_move[0], "col": best_move[1]}
