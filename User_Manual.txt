@@ -32,6 +32,9 @@ g++ Foo-Rendering.cpp -lSDL2 -lSDL2_image -o Game_Window
 //To start the game with an algorithm that tries to rate possible moves and choose the best, use
 ./play_reversi --ai=4 --no-vis
 
+//For an improved version of the level 4 ai that looks deeper than one move, use
+./play_reversi --ai=5 --no-vis
+
 //To play both sides of the game, leave off --ai=x
 
 //To play in the terminal, leave off --no-vis
