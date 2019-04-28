@@ -1,0 +1,14 @@
+Jordan Neely
+Timelog
+
+Learning Python:
+    -spent about 7 hours doing online tutorials and simple programs over the first 2 weeks of the project
+
+Project:
+    -4/3: spent 2 hours working on game logic in reversi.py
+    -4/20: spent 1.5 hours working on various AI, including one that plays a random move
+    -4/26: 2 hours working with Chas and Alex on an AI that would use the minimax method of searching
+           for the best move multiple moves ahead.
+    -spent 6-ish hours working on the project on other days but never took the time to track any of it.
+
+
