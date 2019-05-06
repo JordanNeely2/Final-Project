@@ -6,7 +6,7 @@ import copy
 import random
 import time
 
-levels = 5
+levels = 6
 
 class ReversiAI:
 
@@ -15,7 +15,7 @@ class ReversiAI:
         self.game = game
         self.level = level
         
-        if self.level in {4, 5}:
+        if self.level in {4, 5, 6}:
             with open('board_weight.txt', 'r') as f:
                 self.weights = []
 
@@ -47,8 +47,12 @@ class ReversiAI:
         if level == 5:
             move = self.getMoveWeighted(k=3)
 
-        t_end = time.clock()
+        if level == 6:
+            move = self.getMoveWeighted(k=5)
 
+        t_end = time.clock()
+        
+        print("Time to calculate: %f" % (t_end - t_start))
         if t_end - t_start < wait_time:
             time.sleep(wait_time - (t_end - t_start))
 
